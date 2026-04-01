@@ -39,8 +39,8 @@ class VibeLevel(str, Enum):
 # ─── Sub-models ───────────────────────────────────────────────────────────────
 
 class EmotionDetail(BaseModel):
-    primary: str = Field(..., description="Primary emotion detected")
-    secondary: Optional[str] = Field(None, description="Underlying or masked emotion")
+    primary: EmotionCategory = Field(..., description="Primary emotion detected")
+    secondary: Optional[EmotionCategory] = Field(None, description="Underlying or masked emotion")
     intensity: int = Field(..., ge=0, le=100, description="Intensity of emotion 0–100")
     category: EmotionCategory
 
@@ -84,7 +84,7 @@ class VibeResponse(BaseModel):
     intent_explanation: str = Field(..., description="Why this intent was detected")
     tone: ToneProfile
     vibe: VibeScore
-    red_flags: List[RedFlag]
+    red_flags: List[RedFlag] = Field(default_factory=list, description="List of red flags detected, empty if none")
     rewrite_suggestion: Optional[str] = Field(None, description="A better version of the text if needed")
     word_count: int = Field(..., description="Word count of the original input")
 
@@ -93,8 +93,8 @@ class VibeResponse(BaseModel):
             "example": {
                 "summary": "Professionally masked frustration with an urgency push.",
                 "emotion": {
-                    "primary": "Frustration",
-                    "secondary": "Anxiety",
+                    "primary": "anger",
+                    "secondary": "fear",
                     "intensity": 72,
                     "category": "anger"
                 },
