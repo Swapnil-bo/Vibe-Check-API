@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <!-- ─── Primary Meta ─────────────────────────────────────────────────── -->
+    <title>VibeCheck — Emotional Intelligence for Any Text</title>
+    <meta
+      name="description"
+      content="Paste any text — tweet, email, DM, or message — and get a brutally honest emotional breakdown. Vibe score, intent analysis, red flags, tone profile, and rewrite suggestions."
+    />
+    <meta name="keywords" content="vibe check, sentiment analysis, emotional intelligence, tone analyzer, text analysis, AI, intent detection" />
+    <meta name="author" content="Swapnil Hazra" />
+    <meta name="theme-color" content="#0a0a0f" />
+
+    <!-- ─── Open Graph ────────────────────────────────────────────────────── -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content="https://github.com/Swapnil-bo/Vibe-Check-API" />
+    <meta property="og:title"       content="VibeCheck — Emotional Intelligence for Any Text" />
+    <meta property="og:description" content="Paste any text and get a brutally honest emotional breakdown. Vibe score, intent, red flags, tone tags, and rewrite suggestions — powered by Groq." />
+    <meta property="og:image"       content="/og-image.png" />
+
+    <!-- ─── Twitter Card ─────────────────────────────────────────────────── -->
+    <meta name="twitter:card"        content="summary_large_image" />
+    <meta name="twitter:site"        content="@SwapnilHazra4" />
+    <meta name="twitter:creator"     content="@SwapnilHazra4" />
+    <meta name="twitter:title"       content="VibeCheck — Emotional Intelligence for Any Text" />
+    <meta name="twitter:description" content="Paste any text and get a brutally honest emotional breakdown. Powered by Groq + FastAPI." />
+    <meta name="twitter:image"       content="/og-image.png" />
+
+    <!-- ─── Favicon (inline SVG — no file needed) ────────────────────────── -->
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23a855f7'/><stop offset='100%25' stop-color='%2306b6d4'/></linearGradient></defs><rect width='100' height='100' rx='22' fill='%230a0a0f'/><text y='.9em' font-size='72' x='50%25' text-anchor='middle' dominant-baseline='middle' dy='0.1em' fill='url(%23g)'>⚡</text></svg>"
+    />
+
+    <!-- ─── Font Preconnect ───────────────────────────────────────────────── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- ─── Fonts ─────────────────────────────────────────────────────────── -->
+    <!--
+      Display  : Bricolage Grotesque — variable, editorial, distinctive
+      Body     : DM Sans — clean, modern, highly readable
+      Mono     : JetBrains Mono — for scores, tags, data values
+    -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ─── Global CSS Variables & Base Styles ───────────────────────────── -->
+    <style>
+      /* ── Design Tokens ───────────────────────────────────────────────── */
+      :root {
+        /* Background */
+        --bg-base:        #0a0a0f;
+        --bg-surface:     #111118;
+        --bg-elevated:    #1a1a24;
+        --bg-overlay:     #22222f;
+
+        /* Accent — electric violet → cyan gradient system */
+        --accent-violet:  #a855f7;
+        --accent-cyan:    #06b6d4;
+        --accent-pink:    #ec4899;
+        --accent-amber:   #f59e0b;
+        --accent-emerald: #10b981;
+        --accent-red:     #ef4444;
+
+        /* Text */
+        --text-primary:   #f0f0ff;
+        --text-secondary: #9090b0;
+        --text-muted:     #5a5a7a;
+        --text-inverse:   #0a0a0f;
+
+        /* Borders */
+        --border-subtle:  rgba(255, 255, 255, 0.06);
+        --border-default: rgba(255, 255, 255, 0.10);
+        --border-strong:  rgba(255, 255, 255, 0.20);
+
+        /* Vibe level colors */
+        --vibe-toxic:     #ef4444;
+        --vibe-low:       #f97316;
+        --vibe-neutral:   #eab308;
+        --vibe-warm:      #3b82f6;
+        --vibe-positive:  #10b981;
+
+        /* Typography */
+        --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+        --font-body:    "DM Sans", system-ui, sans-serif;
+        --font-mono:    "JetBrains Mono", "Courier New", monospace;
+
+        /* Spacing */
+        --radius-sm:  6px;
+        --radius-md:  12px;
+        --radius-lg:  20px;
+        --radius-xl:  32px;
+
+        /* Shadows */
+        --shadow-glow-violet: 0 0 40px rgba(168, 85, 247, 0.15);
+        --shadow-glow-cyan:   0 0 40px rgba(6, 182, 212, 0.15);
+        --shadow-card:        0 4px 24px rgba(0, 0, 0, 0.4);
+      }
+
+      /* ── Reset & Base ─────────────────────────────────────────────────── */
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        font-size: 16px;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background-color: var(--bg-base);
+        color: var(--text-primary);
+        font-family: var(--font-body);
+        font-weight: 400;
+        line-height: 1.6;
+        min-height: 100vh;
+        overflow-x: hidden;
+
+        /* Subtle noise grain texture */
+        background-image:
+          radial-gradient(ellipse 80% 50% at 50% -10%, rgba(168, 85, 247, 0.12) 0%, transparent 70%),
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      }
+
+      /* ── Custom Scrollbar ─────────────────────────────────────────────── */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-base);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, var(--accent-violet), var(--accent-cyan));
+        border-radius: 999px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-violet);
+      }
+
+      /* ── Selection ────────────────────────────────────────────────────── */
+      ::selection {
+        background: rgba(168, 85, 247, 0.3);
+        color: var(--text-primary);
+      }
+
+      /* ── React Root ───────────────────────────────────────────────────── */
+      #root {
+        min-height: 100vh;
+        isolation: isolate;
+      }
+
+      /* ── Loading Splash ───────────────────────────────────────────────── */
+      #splash {
+        position: fixed;
+        inset: 0;
+        background: var(--bg-base);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        z-index: 9999;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+      }
+      #splash.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      #splash-logo {
+        font-family: var(--font-display);
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.02em;
+        animation: pulse-logo 1.4s ease-in-out infinite;
+      }
+      #splash-bar {
+        width: 120px;
+        height: 2px;
+        background: var(--bg-elevated);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+      #splash-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent-violet), var(--accent-cyan));
+        border-radius: 999px;
+        animation: loading-bar 1.2s ease-in-out infinite;
+      }
+      @keyframes pulse-logo {
+        0%, 100% { opacity: 1; }
+        50%       { opacity: 0.6; }
+      }
+      @keyframes loading-bar {
+        0%   { width: 0%;   margin-left: 0%; }
+        50%  { width: 80%;  margin-left: 10%; }
+        100% { width: 0%;   margin-left: 100%; }
+      }
+
+      /* ── Utility classes available globally ───────────────────────────── */
+      .font-display { font-family: var(--font-display); }
+      .font-mono    { font-family: var(--font-mono); }
+
+      .gradient-text {
+        background: linear-gradient(135deg, var(--accent-violet), var(--accent-cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-subtle);
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- ─── Loading Splash ─────────────────────────────────────────────────── -->
+    <div id="splash" role="status" aria-label="Loading VibeCheck">
+      <div id="splash-logo">⚡ VibeCheck</div>
+      <div id="splash-bar">
+        <div id="splash-bar-fill"></div>
+      </div>
+    </div>
+
+    <!-- ─── React Root ─────────────────────────────────────────────────────── -->
+    <div id="root"></div>
+
+    <!-- ─── Splash Dismiss ────────────────────────────────────────────────── -->
+    <script>
+      // Hide splash as soon as React has painted its first frame
+      window.addEventListener("DOMContentLoaded", () => {
+        const splash = document.getElementById("splash");
+        // Give React ~400ms to mount, then fade out
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            if (splash) splash.classList.add("hidden");
+          }, 400);
+        });
+      });
+    </script>
+
+    <!-- ─── App Entry ──────────────────────────────────────────────────────── -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
