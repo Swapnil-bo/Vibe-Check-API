@@ -3,7 +3,11 @@ import time
 import logging
 import sys
 from contextlib import asynccontextmanager
+from pathlib import Path
 from dotenv import load_dotenv
+
+# ─── Load env FIRST — before any other backend imports ───────────────────────
+load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
 from fastapi import FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
