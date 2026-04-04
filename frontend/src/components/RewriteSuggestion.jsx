@@ -13,8 +13,9 @@ function useTypewriter(text, speed = 18, startDelay = 300) {
     setDone(false);
     indexRef.current = 0;
 
+    let interval;
     const timeout = setTimeout(() => {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         indexRef.current += 1;
         setDisplayed(text.slice(0, indexRef.current));
         if (indexRef.current >= text.length) {
@@ -22,10 +23,9 @@ function useTypewriter(text, speed = 18, startDelay = 300) {
           setDone(true);
         }
       }, speed);
-      return () => clearInterval(interval);
     }, startDelay);
 
-    return () => clearTimeout(timeout);
+    return () => { clearTimeout(timeout); clearInterval(interval); };
   }, [text, speed, startDelay]);
 
   return { displayed, done };
