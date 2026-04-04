@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: vibe-check-api
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python -m uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
