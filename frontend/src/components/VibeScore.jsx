@@ -78,7 +78,7 @@ function useAnimatedCounter(target, duration = 1.2) {
     });
     const unsub = rounded.on("change", setDisplay);
     return () => { controls.stop(); unsub(); };
-  }, [target]);
+  }, [target, motionVal, rounded, duration]);
 
   return display;
 }
