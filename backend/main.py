@@ -152,6 +152,7 @@ Built with **FastAPI + Groq (llama-3.3-70b-versatile)** as part of the 100 Days 
             "http://localhost:3000",   # fallback CRA
             "http://127.0.0.1:5173",
             "https://vibe-check-api-swapnil-bos-projects.vercel.app",  # ← your actual Vercel URL
+            "https://vibe-check-api.vercel.app",
         ],
         allow_credentials=True,
         allow_methods=["GET", "POST"],
