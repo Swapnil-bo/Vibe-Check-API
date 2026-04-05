@@ -1,3 +1,187 @@
+<div align="center">
+
+# ⚡ VibeCheck
+
+### Paste any text. Get a brutally honest emotional breakdown.
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-vibe--check--api.vercel.app-a855f7?style=for-the-badge&logo=vercel&logoColor=white)](https://vibe-check-api.vercel.app)
+[![Backend](https://img.shields.io/badge/Backend-Render-06b6d4?style=for-the-badge&logo=render&logoColor=white)](https://vibe-check-api-nfbi.onrender.com/api/health)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Groq](https://img.shields.io/badge/Groq-llama--3.3--70b-f97316?style=for-the-badge)](https://groq.com)
+[![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
+
+<br/>
+
+![VibeCheck Demo](https://vibe-check-api.vercel.app/og-image.png)
+
+</div>
+
+---
+
+## 🔮 What Is VibeCheck?
+
+VibeCheck is an AI-powered psycholinguistic analysis engine. You paste any piece of text — a tweet, email, Slack message, DM, or review — and it returns a clinically precise emotional and intent breakdown in under 2 seconds.
+
+It thinks like a combination of:
+- 🔬 **A forensic linguist** — what do the words literally signal?
+- 🧠 **A therapist** — what is the subtext and emotional state?
+- 🎯 **A negotiation expert** — what does this person actually want?
+- 📊 **A behavioural psychologist** — what patterns are present?
+
+---
+
+## ✦ What You Get
+
+| Feature | Description |
+|---|---|
+| **Vibe Score** | 0–100 score with animated SVG ring and level classification |
+| **Dominant Emotion** | Primary + secondary emotion with intensity (0–100) |
+| **Intent Detection** | What does this person actually want? With explanation |
+| **Tone Profile** | Formality, aggression, warmth scored independently |
+| **Tone Tags** | `#passive-aggressive` `#gaslighting` `#genuine` etc. |
+| **Red Flags** | Detected manipulation patterns with severity rating (1–5) |
+| **Rewrite Suggestion** | A better version of the text when vibe score < 60 |
+| **Context-Aware** | Pass text type (email/tweet/DM) for sharper analysis |
+
+### Vibe Score Levels
+
+| Score | Level | Meaning |
+|---|---|---|
+| 0–20 | ☠️ TOXIC | Abusive, threatening, or manipulative |
+| 21–40 | 🥶 LOW | Passive-aggressive, cold, pressuring |
+| 41–60 | 😐 NEUTRAL | Flat, transactional, ambiguous |
+| 61–80 | 🌊 WARM | Friendly, open, constructive |
+| 81–100 | ✨ POSITIVE | Genuine, enthusiastic, supportive |
+
+---
+
+## 🏗️ Architecture
+
+┌─────────────────────────────────────────────────────────────┐
+│                        FRONTEND                              │
+│   React 18 + Vite + Tailwind + Framer Motion                │
+│   Deployed on Vercel                                         │
+└─────────────────────┬───────────────────────────────────────┘
+│ HTTPS (Axios)
+│ X-Text-Type header
+▼
+┌─────────────────────────────────────────────────────────────┐
+│                        BACKEND                               │
+│   FastAPI + Uvicorn                                          │
+│   Deployed on Render                                         │
+│                                                              │
+│   POST /api/analyze                                          │
+│   GET  /api/demo                                             │
+│   GET  /api/health                                           │
+└─────────────────────┬───────────────────────────────────────┘
+│ Groq SDK
+▼
+┌─────────────────────────────────────────────────────────────┐
+│                      GROQ API                                │
+│   Model: llama-3.3-70b-versatile                             │
+│   God-mode system prompt with:                               │
+│   • Injected enums (zero drift)                              │
+│   • 10 red flag marker categories                            │
+│   • 3 few-shot examples                                      │
+│   • Vibe score calibration anchors                           │
+│   • Full edge case handling                                  │
+└─────────────────────────────────────────────────────────────┘
+
+---
+
+## 🗂️ Project Structure
+
+vibe-check-api/
+│
+├── backend/
+│   ├── models/
+│   │   └── schemas.py          # Pydantic models with enums + validators
+│   ├── prompts/
+│   │   └── vibe_prompt.py      # God-mode system prompt + few-shot examples
+│   ├── routes/
+│   │   └── vibe.py             # FastAPI routes with granular error mapping
+│   ├── services/
+│   │   └── groq_service.py     # Groq client + retry + JSON extraction
+│   ├── main.py                 # App factory + middleware + lifespan
+│   └── requirements.txt
+│
+├── frontend/
+│   └── src/
+│       ├── components/
+│       │   ├── TextInput.jsx       # Drag-drop, clipboard paste, cycling placeholder
+│       │   ├── VibeScore.jsx       # Animated SVG ring + tick marks + confidence arc
+│       │   ├── EmotionBreakdown.jsx # Emotion bubbles + tone meters + intent badge
+│       │   └── RewriteSuggestion.jsx # Typewriter effect + word highlighting
+│       ├── App.jsx
+│       └── index.css           # Full animation library + design system
+│
+├── render.yaml
+└── README.md
+
+---
+
+## 🚀 Running Locally
+
+### Prerequisites
+- Python 3.11+
+- Node.js 18+
+- A [Groq API key](https://console.groq.com) (free)
+
+### Backend
+```bash
+# Clone the repo
+git clone https://github.com/Swapnil-bo/Vibe-Check-API.git
+cd Vibe-Check-API
+
+# Create and activate virtual environment (optional but recommended)
+python -m venv venv
+venv\Scripts\activate  # Windows
+source venv/bin/activate  # Mac/Linux
+
+# Install dependencies
+pip install -r backend/requirements.txt
+
+# Add your Groq API key
+echo "GROQ_API_KEY=your_key_here" > backend/.env
+
+# Start the backend
+python -m uvicorn backend.main:app --reload --port 8000
+```
+
+Backend will be live at `http://localhost:8000`
+- Swagger docs: `http://localhost:8000/docs`
+- Health check: `http://localhost:8000/api/health`
+- Demo endpoint: `http://localhost:8000/api/demo`
+
+### Frontend
+```bash
+# In a new terminal
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend will be live at `http://localhost:5173`
+
+---
+
+## 🌐 API Reference
+
+### `POST /api/analyze`
+
+Analyze the emotional vibe of any text.
+
+**Request**
+```json
+{
+  "text": "Hey, just following up again on this. Let me know when you get a chance."
+}
+```
+
+**Optional Header**
+
+X-Text-Type: email | tweet | slack/chat | text_message | review | unknown
+
 **Response**
 ```json
 {
