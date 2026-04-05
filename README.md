@@ -10,10 +10,6 @@
 [![Groq](https://img.shields.io/badge/Groq-llama--3.3--70b-f97316?style=for-the-badge)](https://groq.com)
 [![React](https://img.shields.io/badge/React-18.3-61dafb?style=for-the-badge&logo=react&logoColor=white)](https://react.dev)
 
-<br/>
-
-![VibeCheck Demo](https://vibe-check-api.vercel.app/og-image.png)
-
 </div>
 
 ---
@@ -57,14 +53,15 @@ It thinks like a combination of:
 
 ## 🏗️ Architecture
 
+```
 ┌─────────────────────────────────────────────────────────────┐
 │                        FRONTEND                              │
 │   React 18 + Vite + Tailwind + Framer Motion                │
 │   Deployed on Vercel                                         │
 └─────────────────────┬───────────────────────────────────────┘
-│ HTTPS (Axios)
-│ X-Text-Type header
-▼
+                      │ HTTPS (Axios)
+                      │ X-Text-Type header
+                      ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                        BACKEND                               │
 │   FastAPI + Uvicorn                                          │
@@ -74,8 +71,8 @@ It thinks like a combination of:
 │   GET  /api/demo                                             │
 │   GET  /api/health                                           │
 └─────────────────────┬───────────────────────────────────────┘
-│ Groq SDK
-▼
+                      │ Groq SDK
+                      ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                      GROQ API                                │
 │   Model: llama-3.3-70b-versatile                             │
@@ -86,11 +83,13 @@ It thinks like a combination of:
 │   • Vibe score calibration anchors                           │
 │   • Full edge case handling                                  │
 └─────────────────────────────────────────────────────────────┘
+```
 
 ---
 
 ## 🗂️ Project Structure
 
+```
 vibe-check-api/
 │
 ├── backend/
@@ -108,15 +107,16 @@ vibe-check-api/
 ├── frontend/
 │   └── src/
 │       ├── components/
-│       │   ├── TextInput.jsx       # Drag-drop, clipboard paste, cycling placeholder
-│       │   ├── VibeScore.jsx       # Animated SVG ring + tick marks + confidence arc
-│       │   ├── EmotionBreakdown.jsx # Emotion bubbles + tone meters + intent badge
+│       │   ├── TextInput.jsx         # Drag-drop, clipboard paste, cycling placeholder
+│       │   ├── VibeScore.jsx         # Animated SVG ring + tick marks + confidence arc
+│       │   ├── EmotionBreakdown.jsx  # Emotion bubbles + tone meters + intent badge
 │       │   └── RewriteSuggestion.jsx # Typewriter effect + word highlighting
 │       ├── App.jsx
 │       └── index.css           # Full animation library + design system
 │
 ├── render.yaml
 └── README.md
+```
 
 ---
 
@@ -128,15 +128,11 @@ vibe-check-api/
 - A [Groq API key](https://console.groq.com) (free)
 
 ### Backend
+
 ```bash
 # Clone the repo
 git clone https://github.com/Swapnil-bo/Vibe-Check-API.git
 cd Vibe-Check-API
-
-# Create and activate virtual environment (optional but recommended)
-python -m venv venv
-venv\Scripts\activate  # Windows
-source venv/bin/activate  # Mac/Linux
 
 # Install dependencies
 pip install -r backend/requirements.txt
@@ -154,6 +150,7 @@ Backend will be live at `http://localhost:8000`
 - Demo endpoint: `http://localhost:8000/api/demo`
 
 ### Frontend
+
 ```bash
 # In a new terminal
 cd frontend
@@ -179,8 +176,9 @@ Analyze the emotional vibe of any text.
 ```
 
 **Optional Header**
-
+```
 X-Text-Type: email | tweet | slack/chat | text_message | review | unknown
+```
 
 **Response**
 ```json
